@@ -6,6 +6,7 @@ use Validator;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Dotenv\Validator as DotenvValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use function App\Helpers\apiSuccessResponse;
@@ -19,25 +20,22 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        if($validation->fails())
-        {
+        if($validation->fails()) {
             return response()->json(['error' => $validation->errors()], 422);
         }
 
         $isExists = Category::where('name', $request->name)->exists();
 
-       if($isExists == true) {
+        if($isExists == true) {
             return apiErrorResponse('Category already exists');
-       }  else {
+        } else {
             $category = Category::create([
                 'name' => $request->name,
                 'parent_id' => $request->parent_id,
                 'display_order' => $request->display_order,
             ]);
-
             return apiSuccessResponse($category, 'Category added successfully.');
-       }
-
+        }
     }
 
     public function editCategory(Request $request)
@@ -46,8 +44,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        if($validation->fails())
-        {
+        if($validation->fails()) {
             return response()->json(['error' => $validation->errors()], 422);
         }
 
@@ -65,7 +62,6 @@ class CategoryController extends Controller
         $category = Category::where('id', $request->id)->update(['is_deleted' => 1]);
 
         return apiSuccessResponse($category, 'Category deleted successfully.');
-
     }
 
     public function getAllCategory()

@@ -6,6 +6,8 @@ use Validator;
 use App\Models\ContributorMeta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\FlareClient\Api;
+
 use function App\Helpers\apiSuccessResponse;
 use function App\Helpers\apiErrorResponse;
 
@@ -20,16 +22,15 @@ class ContributorMetaController extends Controller
             'publication_reviewed' => 'required|string|max:255',
         ]);
 
-        if($validation->fails())
-        {
+        if($validation->fails()) {
             return response()->json(['error' => $validation->errors()], 422);
         }
 
         $isExists = ContributorMeta::where('name', $request->name)->exists();
 
-       if($isExists == true) {
+        if($isExists == true) {
             return apiErrorResponse('Data already exists');
-       }  else {
+        } else {
             $contributor = ContributorMeta::create([
                 'name' => $request->name,
                 'category_id' => $request->category_id,
@@ -40,10 +41,8 @@ class ContributorMetaController extends Controller
                 'publication_title' => $request->publication_title,
                 'publication_weblink' => $request->publication_weblink,
             ]);
-
             return apiSuccessResponse($contributor, 'ContributorMeta added successfully.');
-       }
-
+        }
     }
 
     // public function editMaterial(Request $request)

@@ -270,7 +270,7 @@ class UserController extends Controller
         // Create user
         $user = User::create([
             'name' => $request->name,
-            'role_id' => 3, // Set role to user
+            'role_id' => $request->role,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -321,4 +321,77 @@ class UserController extends Controller
     //         return apiSuccessResponse($result, 'Registration successfully.');
     //    }
     // }
+
+    public function userDetails($id)
+    {
+        $user = User::select(
+            'users.id as id',
+            'roles.role_name as role_name',
+            'users.name as name',
+            'users.email as email',
+            'users.created_at'
+        )
+        ->join('roles', 'users.role_id', '=', 'roles.id')
+        ->where('users.id', $id)
+        ->get();
+
+        if($user) {
+            return apiSuccessResponse($user, 'Get user details successfully.');
+        } else {
+            return apiErrorResponse('Something went to wrong!');
+        }
+    }
+
+    public function getAllUser()
+    {
+        $users = User::select(
+            'users.id as id',
+            'roles.role_name as role_name',
+            'users.name as name',
+            'users.email as email',
+            'users.created_at'
+        )
+        ->join('roles', 'users.role_id', '=', 'roles.id')
+        ->get();
+
+        return apiSuccessResponse($users, 'Get all users successfully.');
+    }
+
+    // public function deleteUser(Request $request) {
+    //     try {
+    //         $user = User::findOrFail($request->id);
+    //         $user->delete();
+    //         return response()->json([
+    //             'status' => 200,
+    //             'success' => true,
+    //             'message' => 'User deleted successfully.',
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status' => 200,
+    //             'success' => false,
+    //             'message' => 'User not found or deletion failed!',
+    //             'error' => $e->getMessage(),
+    //         ], 200);
+    //     }
+    // }
+
+    public function deleteUser($id) {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return response()->json([
+                'status' => 200,
+                'success' => true,
+                'message' => 'User deleted successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 400,
+                'success' => false,
+                'message' => 'User not found or deletion failed!',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
 }

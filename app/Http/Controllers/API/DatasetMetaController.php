@@ -22,6 +22,7 @@ class DatasetMetaController extends Controller
         {
             $material = new Material();
             $material->name = !empty($request->input('material_name')) ? $request->input('material_name') : '';
+
             if($request->hasfile('material_image'))
             {
                 $file = $request->file('material_image');
@@ -30,6 +31,7 @@ class DatasetMetaController extends Controller
                 $file->move('uploads/materials/', $filename);
                 $material->image = $filename;
             }
+
             $material->save();
             $last_insert_material_id = $material->id;
 

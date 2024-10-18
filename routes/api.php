@@ -46,9 +46,13 @@ Route::post('user/login','App\Http\Controllers\API\UserController@userLogin')->n
 
 Route::post('contributor/register','App\Http\Controllers\API\UserController@contributorRegister')->name('contributor.register');
 Route::post('user/register','App\Http\Controllers\API\UserController@userRegister')->name('user.register');
+Route::get('user/details/{id}','App\Http\Controllers\API\UserController@userDetails')->name('user.details');
 
 Route::post('register','App\Http\Controllers\API\UserController@register')->name('register');
 
 Route::get('materials', 'App\Http\Controllers\API\MaterialController@getAllMaterial')->name('materials');
+
+Route::get('users', 'App\Http\Controllers\API\UserController@getAllUser')->name('users');
+Route::post('user/delete/{id}', 'App\Http\Controllers\API\UserController@deleteUser')->name('user.delete');
 
 Route::get('categories', 'App\Http\Controllers\API\CategoryController@getAllCategory')->name('categories');
